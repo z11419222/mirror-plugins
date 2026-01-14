@@ -19,33 +19,36 @@ user-invocable: false
 
 ## 处理流程（合并后统一分析）
 
-### Step 1: 使用脚本合并文件（避免API调用）
+### Step 1: 合并批次文件
 
-**必须使用 Bash 命令**合并文件，不要使用 Read 工具逐个读取：
+**优先使用 Bash 命令**（跨平台兼容）：
 
-```powershell
-# PowerShell 脚本：合并批次文件
-$files = @("文案001.txt", "文案002.txt", "文案003.txt")  # 批次文件列表
-$output = ".mirror-writing/_batch_N_merged.txt"
-
-foreach ($file in $files) {
-    "===== 文件: $file =====" | Add-Content $output
-    Get-Content $file | Add-Content $output
-    "" | Add-Content $output
-}
-```
-
-或使用 Bash：
 ```bash
 # Bash 脚本：合并批次文件
 files=("文案001.txt" "文案002.txt" "文案003.txt")
 output=".mirror-writing/_batch_N_merged.txt"
+
+# 清空或创建输出文件
+> "$output"
 
 for file in "${files[@]}"; do
     echo "===== 文件: $file =====" >> "$output"
     cat "$file" >> "$output"
     echo "" >> "$output"
 done
+```
+
+**Windows PowerShell 备选**（仅当 bash 不可用时）：
+```powershell
+$files = @("文案001.txt", "文案002.txt", "文案003.txt")
+$output = ".mirror-writing/_batch_N_merged.txt"
+
+"" | Set-Content $output  # 清空文件
+foreach ($file in $files) {
+    "===== 文件: $file =====" | Add-Content $output
+    Get-Content $file | Add-Content $output
+    "" | Add-Content $output
+}
 ```
 
 ### Step 2: 读取合并后的文件

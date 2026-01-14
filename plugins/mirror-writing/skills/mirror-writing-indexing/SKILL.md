@@ -34,10 +34,19 @@ allowed-tools: Read, Write, Bash, Glob
 ### 执行流程
 
 #### Step 1: 扫描并统计
+
+使用 **Glob 工具** 获取所有 txt 文件列表，然后用 **Read 工具** 检查每个文件大小。
+
+或者直接使用跨平台命令：
 ```bash
-# 获取所有txt文件及其大小
-Get-ChildItem -Filter "*.txt" | Select-Object Name, Length | Sort-Object Length
+# Linux/macOS
+find . -maxdepth 1 -name "*.txt" -type f -exec stat --format='%n|%s' {} \; 2>/dev/null | sort -t'|' -k2 -n
+
+# Windows (PowerShell)
+Get-ChildItem -Filter "*.txt" | Select-Object Name, Length | Sort-Object Length | ConvertTo-Json
 ```
+
+**推荐方式**：使用 Claude 的内置 Glob 工具扫描，无需 shell 命令。
 
 统计结果保存到内存，格式：
 ```json
