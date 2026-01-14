@@ -29,6 +29,16 @@
 /plugin install mirror-writing@mirror-plugins
 ```
 
+### ⚠️ 重要提示
+
+如果安装后 **代理（Agents）未显示**，请在 Claude Code 工作目录下创建空的 `agents/` 文件夹：
+
+```bash
+mkdir agents
+```
+
+这是 Claude Code 加载插件代理的前置条件。
+
 ---
 
 ## 📝 插件详情

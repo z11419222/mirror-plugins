@@ -1,5 +1,5 @@
 ---
-name: mirror-writing-workflow
+name: 文案创作助手
 description: 自动化内容创作工作流，支持交互式确认和超时默认。当用户提到"帮我创作"、"写文案"、"生成文案"时使用。
 skills: mirror-writing-task-analysis, mirror-writing-brainstorm, mirror-writing-deep-dive, mirror-writing-generation
 model: sonnet
