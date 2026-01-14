@@ -16,5 +16,7 @@
     "content",
     "serendipity",
     "知识库"
-  ]
+  ],
+  "agents": "./agents",
+  "commands": "./commands"
 }

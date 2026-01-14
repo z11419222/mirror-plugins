@@ -1,5 +1,5 @@
 ---
-description: 索引知识库，提取关键词和Serendipity种子词
+description: 索引知识库
 ---
 
 # 索引知识库
