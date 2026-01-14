@@ -1,6 +1,7 @@
 ---
 name: mirror-writing-indexing
-description: 对当前目录的txt文件建立深度索引。自动按批次处理大型知识库。当用户提到"索引知识库"、"建立索引"、"index"时使用。
+description: 【独立功能】对当前目录的txt文件建立深度索引，自动按批次处理大型知识库
+context: fork
 allowed-tools: Read, Write, Bash, Glob
 ---
 
@@ -28,7 +29,7 @@ allowed-tools: Read, Write, Bash, Glob
 ### 核心原则
 - **目标**：减少API调用次数，降低成本
 - **策略**：按文件大小分批，每批合并后统一分析
-- **限制**：单批次合并内容最大 **50KB**
+- **限制**：单批次合并内容最大 **40KB**
 
 ### 执行流程
 
@@ -50,14 +51,14 @@ Get-ChildItem -Filter "*.txt" | Select-Object Name, Length | Sort-Object Length
 #### Step 2: 智能分批
 按以下规则分批：
 1. 按文件大小**从小到大排序**
-2. 累加文件大小，当累计接近 50KB 时切分为一批
-3. 单个文件超过 50KB 时，该文件独立为一批
+2. 累加文件大小，当累计接近 40KB 时切分为一批
+3. 单个文件超过 40KB 时，该文件独立为一批
 
 **分批算法伪代码**：
 ```
 current_batch = []
 current_size = 0
-MAX_BATCH_SIZE = 50 * 1024  # 50KB
+MAX_BATCH_SIZE = 40 * 1024  # 40KB
 
 for file in sorted_files:
     if current_size + file.size > MAX_BATCH_SIZE:

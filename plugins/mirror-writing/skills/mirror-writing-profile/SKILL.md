@@ -1,6 +1,7 @@
 ---
 name: mirror-writing-profile
-description: 分析当前目录的内容样本生成创作者风格画像。当用户提到"分析风格"、"生成画像"、"profile"时使用。
+description: 【独立功能】分析当前目录的内容样本生成创作者风格画像
+context: fork
 allowed-tools: Read, Write, Glob
 ---
 
@@ -21,7 +22,7 @@ allowed-tools: Read, Write, Glob
 ## 样本选择建议
 
 - 数量建议：10-20篇为佳
-- 多样性：选择涵盖不同主题的内容
+- 多样性：选择涵盖不同主题/长度的内容
 - 代表性：优先选择表现较好的内容
 - 完整性：每篇内容应该是完整的
 

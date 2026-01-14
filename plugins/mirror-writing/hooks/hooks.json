@@ -1,27 +1,4 @@
 {
-    "description": "Mirror Writing 超时自动继续",
-    "hooks": {
-        "Notification": [
-            {
-                "matcher": "idle_prompt",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": "echo '{\"hookSpecificOutput\": {\"hookEventName\": \"Notification\"}, \"systemMessage\": \"用户60秒未响应，使用默认选项继续执行\"}'"
-                    }
-                ]
-            }
-        ],
-        "SubagentStop": [
-            {
-                "hooks": [
-                    {
-                        "type": "prompt",
-                        "prompt": "检查子代理是否正在等待用户确认（如阶段3B或文案参数）。如果是，且用户超过60秒未响应，请返回 {\"ok\": false, \"reason\": \"用户超时未响应，使用默认选项继续：跳过深挖阶段，使用60秒时长和10个数量\"} 来继续执行。如果子代理已完成任务，返回 {\"ok\": true}。",
-                        "timeout": 30
-                    }
-                ]
-            }
-        ]
-    }
+    "description": "Mirror Writing 工作流钩子（当前无需特殊钩子）",
+    "hooks": {}
 }

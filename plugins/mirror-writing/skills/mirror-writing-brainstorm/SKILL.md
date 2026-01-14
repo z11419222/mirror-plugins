@@ -1,6 +1,6 @@
 ---
 name: mirror-writing-brainstorm
-description: 基于画像和任务分析进行多层创意发散，生成关键词云和创意火花。当用户提到"发散"、"灵感"、"头脑风暴"时使用。
+description: 【工作流内部阶段】基于画像和任务分析进行多层创意发散，生成关键词云和创意火花
 allowed-tools: Read, Write, Glob
 ---
 
@@ -14,22 +14,26 @@ allowed-tools: Read, Write, Glob
 
 - **会话路径**: `$SESSION_PATH`（由主协调子代理传递）
 - **画像路径**: `./.mirror-writing/profile.md`（全局）
+- **索引路径**: `./.mirror-writing/_index.json`（全局，用于L2随机采样）
 - **任务路径**: `$SESSION_PATH/task.json`
-- **知识库路径**: 当前工作目录（用于L2随机采样）
+- **知识库路径**: 当前工作目录
 - **输出路径**: `$SESSION_PATH/keywords.md`
 
 ## 执行前检查
 
 1. 读取 `.mirror-writing/profile.md`（如存在）
 2. 读取 `$SESSION_PATH/task.json`
-3. 如需L2发散，从当前目录随机抽取3-5篇**不直接相关**的 txt 内容
+3. **L2随机采样**（索引优先策略）：
+   - 若 `_index.json` 存在：从 `.files[].file_name` 中随机选取3-5个文件名，再读取对应txt
+   - 若 `_index.json` 不存在：从当前目录随机扫描3-5篇txt
+   - 选取原则：**排除与主题直接相关的文件**，寻找意外关联
 
 ## 发散参数
 
-询问用户或使用默认值：
-- **发散程度**: 极高/高(默认)/低
-- **Serendipity强度**: 强制关联/自然关联(默认)/仅参考
-- **期望关键词总数**: 50/80(默认)/30
+以下参数使用默认值（可由主协调子代理传递覆盖）：
+- **发散程度**: 高（默认）
+- **Serendipity强度**: 自然关联（默认）
+- **期望关键词总数**: 80（默认）
 
 ### 发散程度说明
 | 程度 | 联想半径 | 适用场景 | 示例（种子词：职场焦虑）|

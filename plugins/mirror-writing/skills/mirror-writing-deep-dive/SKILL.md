@@ -1,6 +1,6 @@
 ---
 name: mirror-writing-deep-dive
-description: 基于关键词云检索索引进行二次Serendipity联想，发现更深层创意关联。当用户提到"深挖"、"更多意外想法"时使用。
+description: 【工作流内部阶段】基于关键词云检索索引进行二次Serendipity联想，发现更深层创意关联
 allowed-tools: Read, Write
 ---
 

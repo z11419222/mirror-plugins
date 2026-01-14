@@ -2,7 +2,7 @@
 name: mirror-writing-index-batch
 description: 处理一批txt文件生成索引。内部Skill，由mirror-writing-indexing调用。
 context: fork
-allowed-tools: Read, Write
+allowed-tools: Read, Write, Bash
 user-invocable: false
 ---
 
@@ -15,7 +15,7 @@ user-invocable: false
 
 主 Skill 会传递以下信息：
 - **批次编号**: 如 batch_1, batch_2
-- **文件列表**: 该批次需要处理的文件名列表（已按大小分组，合计不超过50KB）
+- **文件列表**: 该批次需要处理的文件名列表（已按大小分组，合计不超过40KB）
 
 ## 处理流程（合并后统一分析）
 
