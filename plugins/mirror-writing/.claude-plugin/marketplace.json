@@ -1,0 +1,17 @@
+{
+    "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+    "name": "mirror-writing-marketplace",
+    "version": "1.0.0",
+    "description": "Mirror Writing 本地插件市场",
+    "owner": {
+        "name": "local"
+    },
+    "plugins": [
+        {
+            "name": "mirror-writing",
+            "source": "./",
+            "description": "自媒体短视频文案创作助手",
+            "version": "1.0.0"
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "name": "example-plugin",
+    "description": "示例插件 - 展示 Claude Code 插件的基本结构，供开发者参考",
+    "version": "1.0.0",
+    "author": {
+        "name": "镜界工作室"
+    },
+    "license": "MIT",
+    "keywords": [
+        "示例",
+        "模板",
+        "教程",
+        "example",
+        "template"
+    ]
+}

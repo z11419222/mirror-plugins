@@ -1,0 +1,13 @@
+{
+    "PostToolUse": [
+        {
+            "matcher": "Write|Edit",
+            "hooks": [
+                {
+                    "type": "command",
+                    "command": "echo '文件已修改，这是钩子示例输出'"
+                }
+            ]
+        }
+    ]
+}

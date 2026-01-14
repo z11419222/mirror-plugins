@@ -1,0 +1,150 @@
+---
+name: mirror-writing-index-batch
+description: 处理一批txt文件生成索引。内部Skill，由mirror-writing-indexing调用。
+context: fork
+allowed-tools: Read, Write
+user-invocable: false
+---
+
+# 批次索引处理器
+
+> 这是一个内部 Skill，由 mirror-writing-indexing 调用
+> 每个批次在独立的分叉上下文中运行，完成后上下文释放
+
+## 接收参数
+
+主 Skill 会传递以下信息：
+- **批次编号**: 如 batch_1, batch_2
+- **文件列表**: 该批次需要处理的文件名列表（已按大小分组，合计不超过50KB）
+
+## 处理流程（合并后统一分析）
+
+### Step 1: 使用脚本合并文件（避免API调用）
+
+**必须使用 Bash 命令**合并文件，不要使用 Read 工具逐个读取：
+
+```powershell
+# PowerShell 脚本：合并批次文件
+$files = @("文案001.txt", "文案002.txt", "文案003.txt")  # 批次文件列表
+$output = ".mirror-writing/_batch_N_merged.txt"
+
+foreach ($file in $files) {
+    "===== 文件: $file =====" | Add-Content $output
+    Get-Content $file | Add-Content $output
+    "" | Add-Content $output
+}
+```
+
+或使用 Bash：
+```bash
+# Bash 脚本：合并批次文件
+files=("文案001.txt" "文案002.txt" "文案003.txt")
+output=".mirror-writing/_batch_N_merged.txt"
+
+for file in "${files[@]}"; do
+    echo "===== 文件: $file =====" >> "$output"
+    cat "$file" >> "$output"
+    echo "" >> "$output"
+done
+```
+
+### Step 2: 读取合并后的文件
+使用 **Read 工具** 读取单个合并文件 `_batch_N_merged.txt`（仅1次API调用）
+
+### Step 3: 统一分析
+对合并后的文本进行**一次性分析**，为每个文件提取：
+- 关键词（三级）
+- 关联词
+- 结构特征
+- 情感特征
+- 主题分类
+- Serendipity种子词
+
+### Step 4: 保存并清理
+1. 将分析结果保存到 `.mirror-writing/_batch_N.json`
+2. 删除临时合并文件 `_batch_N_merged.txt`
+
+## 单文件分析要求
+
+### 1. 关键词提取（三级）
+- **主关键词**: 3-5个，直接体现文案核心主题的词
+- **次关键词**: 5-10个，与主题相关的重要概念
+- **长尾词**: 10-20个，具体的场景词、动作词、细节词
+
+### 2. 关联词发散（激进模式）
+AI需要主动联想，不限于文案中出现的词：
+- **语义关联**: 意思相近或相关的词汇
+- **隐喻关联**: 可以用来比喻/类比这个主题的事物
+- **跨领域关联**: 完全不同领域但有内在联系的概念
+
+### 3. 结构特征
+- **开头类型**: 痛点直击/场景代入/金句开场/数据冲击/悬念设置/提问开场/其他
+- **正文类型**: 并列式/递进式/对比式/故事线/问答式/其他
+- **结尾类型**: 金句总结/行动号召/开放思考/情感升华/互动引导/其他
+- **长度类别**: 短(≤100字)/中(100-250字)/长(>250字)
+
+### 4. 情感特征
+- **主情感**: 一个词描述核心情感（如：励志/治愈/犀利/温暖/焦虑/释然等）
+- **情感强度**: 1-5分
+- **语气类型**: 对话式/独白式/教学式/吐槽式/叙事式/其他
+
+### 5. 主题分类
+- 2-5个主题标签
+
+### 6. Serendipity种子词
+生成3-5个可用于意外联想的跨界种子词。思考：
+- 这篇内容可以用什么意想不到的事物来类比？
+- 如果要把这个主题讲给完全不同领域的人听，可以用什么桥梁？
+- 这个内容的情感内核，还可能出现在什么场景中？
+- 这些词应该与原文主题有隐藏的、非显性的关联
+
+## 输出格式
+
+保存为 `.mirror-writing/_batch_N.json`：
+
+```json
+{
+  "batch_id": "batch_1",
+  "processed_at": "2026-01-13",
+  "files": [
+    {
+      "file_id": "001",
+      "file_name": "文案001.txt",
+      
+      "keywords": {
+        "primary": ["主关键词1", "主关键词2", "..."],
+        "secondary": ["次关键词1", "次关键词2", "..."],
+        "long_tail": ["长尾词1", "长尾词2", "..."]
+      },
+      
+      "associations": {
+        "semantic": ["语义关联词1", "..."],
+        "metaphor": ["隐喻关联词1", "..."],
+        "cross_domain": ["跨领域关联词1", "..."]
+      },
+      
+      "structure": {
+        "opening_type": "开头类型",
+        "body_type": "正文类型",
+        "ending_type": "结尾类型",
+        "length_category": "短/中/长"
+      },
+      
+      "emotion": {
+        "primary": "主情感",
+        "intensity": 3,
+        "tone": "语气类型"
+      },
+      
+      "topics": ["主题1", "主题2"],
+      
+      "serendipity_seeds": ["种子词1", "种子词2", "种子词3"]
+    }
+  ]
+}
+```
+
+## 完成确认
+
+处理完成后，返回简短确认：
+`批次 N 完成，处理了 X 个文件，保存到 _batch_N.json`

@@ -1,0 +1,20 @@
+{
+  "name": "mirror-writing",
+  "description": "自媒体短视频文案创作助手，支持知识库索引、选题分析、创意发散、文案生成。基于多层Serendipity联想的内容创作系统。",
+  "version": "1.0.0",
+  "author": {
+    "name": "镜界工作室"
+  },
+  "homepage": "https://github.com/z11419222/mirror-plugins",
+  "repository": "https://github.com/z11419222/mirror-plugins",
+  "license": "MIT",
+  "keywords": [
+    "自媒体",
+    "文案",
+    "创作",
+    "短视频",
+    "content",
+    "serendipity",
+    "知识库"
+  ]
+}

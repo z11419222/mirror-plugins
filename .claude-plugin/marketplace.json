@@ -1,0 +1,48 @@
+{
+    "name": "mirror-plugins",
+    "owner": {
+        "name": "镜界工作室"
+    },
+    "metadata": {
+        "description": "镜界工作室 Claude Code 插件市场 - 提供内容创作、自媒体工具等实用插件",
+        "version": "1.0.0"
+    },
+    "plugins": [
+        {
+            "name": "mirror-writing",
+            "source": "./plugins/mirror-writing",
+            "description": "自媒体短视频文案创作助手，支持知识库索引、选题分析、创意发散、文案生成。基于多层Serendipity联想的内容创作系统。",
+            "version": "1.0.0",
+            "author": {
+                "name": "镜界工作室"
+            },
+            "category": "content-creation",
+            "keywords": [
+                "自媒体",
+                "文案",
+                "创作",
+                "短视频",
+                "content",
+                "serendipity",
+                "知识库"
+            ]
+        },
+        {
+            "name": "example-plugin",
+            "source": "./plugins/example-plugin",
+            "description": "示例插件 - 展示 Claude Code 插件的基本结构（命令、代理、钩子），供开发者参考学习",
+            "version": "1.0.0",
+            "author": {
+                "name": "镜界工作室"
+            },
+            "category": "developer-tools",
+            "keywords": [
+                "示例",
+                "模板",
+                "教程",
+                "example",
+                "template"
+            ]
+        }
+    ]
+}
