@@ -27,7 +27,6 @@ allowed-tools: Read, Write, Bash, Glob
 ## 批次处理策略（按大小智能分批）
 
 ### 核心原则
-- **目标**：减少API调用次数，降低成本
 - **策略**：按文件大小分批，每批合并后统一分析
 - **限制**：单批次合并内容最大 **40KB**
 
@@ -35,18 +34,7 @@ allowed-tools: Read, Write, Bash, Glob
 
 #### Step 1: 扫描并统计
 
-使用 **Glob 工具** 获取所有 txt 文件列表，然后用 **Read 工具** 检查每个文件大小。
-
-或者直接使用跨平台命令：
-```bash
-# Linux/macOS
-find . -maxdepth 1 -name "*.txt" -type f -exec stat --format='%n|%s' {} \; 2>/dev/null | sort -t'|' -k2 -n
-
-# Windows (PowerShell)
-Get-ChildItem -Filter "*.txt" | Select-Object Name, Length | Sort-Object Length | ConvertTo-Json
-```
-
-**推荐方式**：使用 Claude 的内置 Glob 工具扫描，无需 shell 命令。
+获取所有 txt 文件列表，检查每个文件大小。
 
 统计结果保存到内存，格式：
 ```json
@@ -59,29 +47,8 @@ Get-ChildItem -Filter "*.txt" | Select-Object Name, Length | Sort-Object Length 
 
 #### Step 2: 智能分批
 按以下规则分批：
-1. 按文件大小**从小到大排序**
-2. 累加文件大小，当累计接近 40KB 时切分为一批
-3. 单个文件超过 40KB 时，该文件独立为一批
-
-**分批算法伪代码**：
-```
-current_batch = []
-current_size = 0
-MAX_BATCH_SIZE = 40 * 1024  # 40KB
-
-for file in sorted_files:
-    if current_size + file.size > MAX_BATCH_SIZE:
-        if current_batch is not empty:
-            save_batch(current_batch)
-        current_batch = [file]
-        current_size = file.size
-    else:
-        current_batch.append(file)
-        current_size += file.size
-
-if current_batch is not empty:
-    save_batch(current_batch)
-```
+1. 累加文件大小，当累计接近 40KB 时切分为一批
+2. 单个文件超过 40KB 时，该文件独立为一批
 
 #### Step 3: 分批处理
 对每个批次，调用 `mirror-writing-index-batch` Skill：
@@ -91,14 +58,6 @@ if current_batch is not empty:
 
 #### Step 4: 合并结果
 所有批次完成后，合并生成最终 `_index.json`
-
-### 预估成本优化
-
-| 场景 | 旧方案（按文件） | 新方案（按大小） |
-|-----|----------------|----------------|
-| 100个1KB文件 | 100次调用 | 约2次调用 |
-| 50个2KB文件 | 50次调用 | 约2次调用 |
-| 10个10KB文件 | 10次调用 | 约2次调用 |
 
 ## 单文件分析要求（用于直接处理模式或传递给子Skill）
 
@@ -206,9 +165,5 @@ AI需要主动联想，不限于文案中出现的词：
 ## 清理临时文件
 
 合并生成 `_index.json` 后，自动删除临时的批次文件：
-
-```
-删除 .mirror-writing/_batch_*.json
-```
 
 保留最终的 `_index.json` 即可。

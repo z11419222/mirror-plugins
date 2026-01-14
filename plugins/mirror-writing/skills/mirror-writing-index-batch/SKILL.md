@@ -21,38 +21,8 @@ user-invocable: false
 
 ### Step 1: 合并批次文件
 
-**优先使用 Bash 命令**（跨平台兼容）：
-
-```bash
-# Bash 脚本：合并批次文件
-files=("文案001.txt" "文案002.txt" "文案003.txt")
-output=".mirror-writing/_batch_N_merged.txt"
-
-# 清空或创建输出文件
-> "$output"
-
-for file in "${files[@]}"; do
-    echo "===== 文件: $file =====" >> "$output"
-    cat "$file" >> "$output"
-    echo "" >> "$output"
-done
-```
-
-**Windows PowerShell 备选**（仅当 bash 不可用时）：
-```powershell
-$files = @("文案001.txt", "文案002.txt", "文案003.txt")
-$output = ".mirror-writing/_batch_N_merged.txt"
-
-"" | Set-Content $output  # 清空文件
-foreach ($file in $files) {
-    "===== 文件: $file =====" | Add-Content $output
-    Get-Content $file | Add-Content $output
-    "" | Add-Content $output
-}
-```
-
 ### Step 2: 读取合并后的文件
-使用 **Read 工具** 读取单个合并文件 `_batch_N_merged.txt`（仅1次API调用）
+读取单个合并文件 `_batch_N_merged.txt`
 
 ### Step 3: 统一分析
 对合并后的文本进行**一次性分析**，为每个文件提取：
